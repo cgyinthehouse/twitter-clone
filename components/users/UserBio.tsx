@@ -4,6 +4,9 @@ import { BiCalendar } from "react-icons/bi";
 
 import useCurrentUser from "@/hooks/useCurrentUser";
 import useUser from "@/hooks/useUser";
+import useEditModal from "@/hooks/useEditModal";
+import useFollow from "@/hooks/useFollow";
+
 import Button from "../Button";
 
 interface UserBioProps {
@@ -12,6 +15,10 @@ interface UserBioProps {
 const UserBio: React.FC<UserBioProps> = ({ userId }) => {
   const { data: currentUser } = useCurrentUser();
   const { data: fetchedUser } = useUser(userId);
+
+  const editModal = useEditModal();
+
+  const { isFollowing, toggleFollow } = useFollow(userId);
 
   const createdAt = useMemo(() => {
     if (!fetchedUser?.createdAt) return null;
@@ -22,9 +29,14 @@ const UserBio: React.FC<UserBioProps> = ({ userId }) => {
     <div className="border-b-[1px] border-neutral-800 pb-4">
       <div className="flex justify-end p-2">
         {currentUser?.id === userId ? (
-          <Button secondary onClick={() => {}} label="Edit" />
+          <Button secondary onClick={editModal.onOpen} label="Edit" />
         ) : (
-          <Button secondary onClick={()=>{}} label="Follow"/>
+          <Button
+            outline={isFollowing}
+            secondary={!isFollowing}
+            onClick={toggleFollow}
+            label={isFollowing ? "Unfollow" : "Follow"}
+          />
         )}
       </div>
       <div className="mt-8 px-4">
@@ -32,16 +44,12 @@ const UserBio: React.FC<UserBioProps> = ({ userId }) => {
           <p className="text-white text-2xl font-semibold">
             {fetchedUser?.name}
           </p>
-          <p className="text-neutral-500 text-md">
-            @{fetchedUser?.username}
-          </p>
+          <p className="text-neutral-500 text-md">@{fetchedUser?.username}</p>
         </div>
         <div className="flex flex-col mt-4">
-          <p className="text-white">
-            {fetchedUser?.bio}
-          </p>
+          <p className="text-white">{fetchedUser?.bio}</p>
           <div className="flex flex-row items-center gap-2 mt-4 text-neutral-500">
-            <BiCalendar size={24}/>
+            <BiCalendar size={24} />
             <p>Joined At {createdAt}</p>
           </div>
         </div>
@@ -51,7 +59,7 @@ const UserBio: React.FC<UserBioProps> = ({ userId }) => {
             <p className="text-neutral-500">Following</p>
           </div>
           <div className="flex flex-row items-center gap-1">
-            <p className="text-white">{fetchedUser?.followingCount || 0}</p>
+            <p className="text-white">{fetchedUser?.followersCount || 0}</p>
             <p className="text-neutral-500">Followers</p>
           </div>
         </div>
