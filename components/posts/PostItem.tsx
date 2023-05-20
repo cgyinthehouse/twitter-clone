@@ -58,6 +58,7 @@ const PostItem: React.FC<PostItemProps> = ({ data, userId }) => {
       <div className="flex flex-row items-start gap-3">
         <Avatar userId={data.user.id} />
         <div>
+          {/* user photo and comment created time */}
           <div className="flex flex-row items-center gap-2">
             <p onClick={goToUser} className="text-white font-semibold cursor-pointer hover:underline">
               {data.user.name}
@@ -65,9 +66,13 @@ const PostItem: React.FC<PostItemProps> = ({ data, userId }) => {
             <span onClick={goToUser} className="text-neutral-500 cursor-pointer hover:underline hidden md:block">@{data.user.username}</span>
             <span className="text-neutral-500 text-sm">{createdAt}</span>
           </div>
+          
+          {/* comment */}
           <div className="text-white mt-1">
             {data.body}
           </div>
+          
+          {/* counts of comments and likes */}
           <div className="flex flex-row items-center mt-3 gap-10">
             <div className="flex flex-row items-center text-neutral-500 gap-2 cursor-pointer transition hover:text-sky-500">
               <AiOutlineMessage size={20}/>
